@@ -64,7 +64,7 @@
                     <article>
                         <img src="user.jpg" alt="vlason" />
                         <h3>
-                        <a href="http://localhost/Yoi%20Bashu%20Full/Niveau%200/wall.php?user_id=<?php echo $info['id'] ?>"><?php echo $info['alias'] ?></a>
+                        <a href="http://localhost/Yoi_Basho_Manon_Driss_Angelina/Niveau0/wall.php?user_id=<?php echo $info['id'] ?>"><?php echo $info['alias'] ?></a>
                         </h3>
                         <p> <?php echo $info["id"] ?> </p>
                     </article>
