@@ -104,7 +104,7 @@
                         <h3>
                             <?php echo $post['created'] ?> 
                         </h3>
-                        <address> <a href="http://localhost/Yoi_Basho_Manon_Driss_Angelina/Niveau0/wall.php?user_id=<?php echo $post['user_id'] ?>"><?php echo $post['author_name'] ?></a></address>
+                        <address> <a href="wall.php?user_id=<?php echo $post['user_id'] ?>"><?php echo $post['author_name'] ?></a></address>
                         <div>
                             <?php echo $post['content'] ?> 
                         </div>                                            
