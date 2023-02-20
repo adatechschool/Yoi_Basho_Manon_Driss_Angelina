@@ -8,7 +8,7 @@
     </head>
     <body>
         <header>
-            <img src="logo-yoi-basho.png" alt="Logo de notre réseau social"/>
+            <img src="logo-yoi.png" alt="Logo de notre réseau social"/>
             <nav id="menu">
             <?php if (isset($_SESSION['connected_id'])) { ?>
                 <form method="post">
