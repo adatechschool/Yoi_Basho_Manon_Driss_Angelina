@@ -1,5 +1,5 @@
 <?php
-    include_once("header.php")
+    include("header.php")
 ?>
         <div id="wrapper">
             <?php
@@ -10,7 +10,7 @@
              * Documentation : https://www.php.net/manual/fr/reserved.variables.get.php
              * ... mais en résumé c'est une manière de passer des informations à la page en ajoutant des choses dans l'url
              */
-            $userId =intval($_GET['user_id']);
+            $userId =intval($_SESSION["connected_id"]);
             ?>
             <?php
             /**
@@ -98,6 +98,10 @@
                 </form>   
             </aside>
             <main>
+
+            <?php
+                include_once("formulaire.php")
+            ?>
                 <?php
                 /**
                  * Etape 3: récupérer tous les messages de l'utilisatrice
