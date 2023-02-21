@@ -49,7 +49,7 @@
                     <form action="usurpedpost.php" method="post">
                         <input type='hidden' name='???' value='achanger'>
                         <dl>
-                            <!-- <dt><label for='message'>Message</label></dt> -->
+                            <label for='message'>Message</label></dt>
                             <dd><textarea name='message'></textarea></dd>
                         </dl>
                         <input type='submit'>

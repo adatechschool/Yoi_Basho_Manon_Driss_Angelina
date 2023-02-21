@@ -37,6 +37,65 @@
                         (n° <?php echo $userId ?>)
                     </p>
                 </section>
+
+                <?php
+
+                $followersTable = 'SELECT * FROM followers';
+                $informationsFollowersTable = $mysqli->query($followersTable);
+
+
+                while ($allFollowers = $informationsFollowersTable->fetch_assoc()){
+
+                    
+                    echo "<pre>" . print_r($allFollowers, 1) . "</pre>";
+
+                    if ($allFollowers["followed_user_id"] == $userToFollow && $allFollowers["following_user_id"] == $userFollowing){
+                        echo "déja followé";
+                    }
+                    
+                }
+
+                // préparer les informations necesseaires
+                $userToFollow = $userId;
+                $userFollowing = $_SESSION["connected_id"];
+                
+
+                if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['follow'])) {
+
+                    $userToFollow = intval($mysqli->real_escape_string($userToFollow));
+                    $userFollowing = intval($mysqli->real_escape_string($userFollowing));
+
+                    // Variables pour injecter les informations dans la base de donner
+                    $lInstructionSql = "INSERT INTO followers (followed_user_id, following_user_id ) VALUES ('".$userToFollow."','".$userFollowing."')";
+
+                    $LetsFollow = $mysqli->query($lInstructionSql);
+
+                    if ( ! $LetsFollow)
+                    {
+                        echo "Impossible de follower: " . $mysqli->error;
+                    } else
+                    {
+                        echo "Victoire je follow $userId";
+                    }
+
+
+                }
+                
+                ?>
+
+                <section>
+                    <p> 
+                        <?php 
+                        echo "l'Id de l'utilisateur que je souhaite suivre : $userToFollow";
+                        echo "<br />";
+                        echo "Mon Id : $userFollowing";
+
+                        ?>
+                    </p>
+                </section>
+                <form action= "" method="post">
+                    <input type="submit" name="follow" value="appuie pour t'abonner">
+                </form>   
             </aside>
             <main>
                 <?php
