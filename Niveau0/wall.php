@@ -1,5 +1,26 @@
 <?php
-    include("header.php")
+    include("header.php");
+
+    $mysqli = new mysqli("localhost", "root", "root", "socialnetwork");
+
+?>
+<?php
+    $abonnement = "wesh fonctionne stp";
+    
+    $userId = $_GET['user_id'];
+    $connectedId = $_SESSION['connected_id']; 
+    $isFollowing = false; 
+    $checkFollow = "SELECT * FROM FOLLOWERS WHERE followed_user_id = '$userId' AND following_user_id = '$connectedId'";
+    $resultCheckFollow = $mysqli->query($checkFollow);
+    if ($resultCheckFollow -> num_rows > 0){
+        $isFollowing = true ;
+    }
+    if ( ! $isFollowing)
+    {
+        $abonnement = "S'abonner";
+    } else {
+        $abonnement = "Se désabonner";
+    } 
 ?>
         <div id="wrapper">
             <?php
@@ -10,15 +31,8 @@
              * Documentation : https://www.php.net/manual/fr/reserved.variables.get.php
              * ... mais en résumé c'est une manière de passer des informations à la page en ajoutant des choses dans l'url
              */
-            $userId =intval($_SESSION["connected_id"]);
+            $userId =intval($_GET['user_id']);
             ?>
-            <?php
-            /**
-             * Etape 2: se connecter à la base de donnée
-             */
-            $mysqli = new mysqli("localhost", "root", "root", "socialnetwork");
-            ?>
-
             <aside>
                 <?php
                 /**
@@ -28,8 +42,29 @@
                 $lesInformations = $mysqli->query($laQuestionEnSql);
                 $user = $lesInformations->fetch_assoc();
                 //@todo: afficher le résultat de la ligne ci dessous, remplacer XXX par l'alias et effacer la ligne ci-dessous
-                echo "<pre>" . print_r($user, 1) . "</pre>";
+                //echo "<pre>" . print_r($user, 1) . "</pre>";
+
+                if (isset($_POST['follow'])) {
+                    $userId = intval($_SESSION['connected_id']);
+                    $followId = $_GET["user_id"];
+                    if($abonnement == "S'abonner"){
+                    // Pour rester sur la session connectée quand on visite le profil d'un autre user
+                    $newFollower = "INSERT INTO followers (followed_user_id, following_user_id)
+                                    VALUES ('$followId', '$userId')";
+                    // On ajoute un nouvel abonné dans la BDD 
+                    $mysqli->query($newFollower);
+                    header("Refresh:0");
+                    } else {
+                        $unfollow = "DELETE FROM followers WHERE followed_user_id = '$followId' AND following_user_id = '$userId'";
+                        $mysqli->query($unfollow);
+                        header("Refresh:0");
+                    }
+                }
+
+
                 ?>
+
+                
                 <img src="user.jpg" alt="Portrait de l'utilisatrice"/>
                 <section>
                     <h3>Présentation</h3>
@@ -40,24 +75,6 @@
 
                 <?php
 
-                $followersTable = 'SELECT * FROM followers';
-                $informationsFollowersTable = $mysqli->query($followersTable);
-
-
-                while ($allFollowers = $informationsFollowersTable->fetch_assoc()){
-
-                    
-                    echo "<pre>" . print_r($allFollowers, 1) . "</pre>";
-
-                    if ($allFollowers["followed_user_id"] == $userToFollow && $allFollowers["following_user_id"] == $userFollowing){
-                        echo "déja followé";
-                    }
-                    
-                }
-
-                // préparer les informations necesseaires
-                $userToFollow = $userId;
-                $userFollowing = $_SESSION["connected_id"];
                 
 
                 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['follow'])) {
@@ -86,21 +103,28 @@
                 <section>
                     <p> 
                         <?php 
-                        echo "l'Id de l'utilisateur que je souhaite suivre : $userToFollow";
-                        echo "<br />";
-                        echo "Mon Id : $userFollowing";
-
+                        //echo "l'Id de l'utilisateur que je souhaite suivre : $userToFollow";
+                        //echo "<br />";
+                       // echo "Mon Id : $userFollowing";
                         ?>
                     </p>
                 </section>
-                <form action= "" method="post">
-                    <input type="submit" name="follow" value="appuie pour t'abonner">
-                </form>   
+                <?php
+                if ( "$userId" !== "$connectedId"){
+                    ?>
+                    <form action= "" method="post">
+                    <input type="submit" name="follow" value="<?php echo $abonnement ?>">
+                    </form>  
+                <?php
+                }
+                ?>
             </aside>
             <main>
 
             <?php
-                include_once("formulaire.php")
+                if ($_SESSION['connected_id'] == $userId) {
+                    include_once("formulaire.php") ;
+                }
             ?>
                 <?php
                 /**
@@ -130,7 +154,7 @@
                 while ($post = $lesInformations->fetch_assoc())
                 {
 
-                    echo "<pre>" . print_r($post, 1) . "</pre>";
+                    //echo "<pre>" . print_r($post, 1) . "</pre>";
                     ?>                
                     <article>
                         <h3>
